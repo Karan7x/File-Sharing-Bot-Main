@@ -14,7 +14,7 @@ from pyrogram.errors import FloodWait, UserIsBlocked, InputUserDeactivated, User
 
 from bot import Bot
 from config import ADMINS, FORCE_MSG, START_MSG, CUSTOM_CAPTION, DISABLE_CHANNEL_BUTTON, PROTECT_CONTENT
-from helper_func import subscribed, encode, decode, get_messages, is_subscribed
+from helper_func import subscribed, encode, decode, get_messages
 from database.database import add_user, del_user, full_userbase, present_user
 
 
@@ -146,6 +146,8 @@ async def start_command(client: Client, message: Message):
             await add_user(id)
         except:
             pass
+    if not await forcedjoined(client, message, f"https://t.me/{client.me.username}?start={message.text.split(maxsplit=1)[1:][0]}" if len(message.text.split(maxsplit=1)) > 1 else ""):
+        return
     text = message.text
     if len(text)>7:
         try:
