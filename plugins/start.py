@@ -5,17 +5,137 @@
 
 import os
 import asyncio
+from asyncio import sleep
+from contextlib import suppress
 from pyrogram import Client, filters, __version__
-from pyrogram.enums import ParseMode
+from pyrogram.enums import ChatType, ChatMemberStatus, ParseMode
 from pyrogram.types import Message, InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
-from pyrogram.errors import FloodWait, UserIsBlocked, InputUserDeactivated
+from pyrogram.errors import FloodWait, UserIsBlocked, InputUserDeactivated, UserNotParticipant, RPCError
 
 from bot import Bot
 from config import ADMINS, FORCE_MSG, START_MSG, CUSTOM_CAPTION, DISABLE_CHANNEL_BUTTON, PROTECT_CONTENT
-from helper_func import subscribed, encode, decode, get_messages
+from helper_func import subscribed, encode, decode, get_messages, is_subscribed
 from database.database import add_user, del_user, full_userbase, present_user
 
 
+async def forcedjoined(c: Client, m: Message, tryag: str = ""):
+    if m.chat.type != ChatType.PRIVATE:
+        return 1
+    with suppress(UserIsBlocked):
+        try:
+            try:
+                u = await c.get_chat_member(-1001680440476, m.from_user.id)
+            except FloodWait as fo:
+                await sleep(fo.value + 1)
+                u = await c.get_chat_member(-1001680440476, m.from_user.id)
+            if u.status in (ChatMemberStatus.BANNED,
+                            ChatMemberStatus.RESTRICTED):
+                await m.reply_text(
+                    text="Sorry, You are Banned!\nNow You Can't Use Me.",
+                    disable_web_page_preview=True,
+                )
+                return 0
+            try:
+                u = await c.get_chat_member(-1001673528398, m.from_user.id)
+            except FloodWait as fo:
+                await sleep(fo.value + 1)
+                u = await c.get_chat_member(-1001673528398, m.from_user.id)
+            if u.status in (ChatMemberStatus.BANNED,
+                            ChatMemberStatus.RESTRICTED):
+                await m.reply_text(
+                    text="Sorry, You are Banned!\nNow You Can't Use Me.",
+                    disable_web_page_preview=True,
+                )
+                return 0
+            try:
+                u = await c.get_chat_member(-1001829070430, m.from_user.id)
+            except FloodWait as fo:
+                await sleep(fo.value + 1)
+                u = await c.get_chat_member(-1001829070430, m.from_user.id)
+            if u.status in (ChatMemberStatus.BANNED,
+                            ChatMemberStatus.RESTRICTED):
+                await m.reply_text(
+                    text="Sorry, You are Banned!\nNow You Can't Use Me.",
+                    disable_web_page_preview=True,
+                )
+                return 0
+            try:
+                u = await c.get_chat_member(-1001487979336, m.from_user.id)
+            except FloodWait as fo:
+                await sleep(fo.value + 1)
+                u = await c.get_chat_member(-1001487979336, m.from_user.id)
+            if u.status in (ChatMemberStatus.BANNED,
+                            ChatMemberStatus.RESTRICTED):
+                await m.reply_text(
+                    text="Sorry, You are Banned!\nNow You Can't Use Me.",
+                    disable_web_page_preview=True,
+                )
+                return 0
+            try:
+                u = await c.get_chat_member(-1001668949698, m.from_user.id)
+            except FloodWait as fo:
+                await sleep(fo.value + 1)
+                u = await c.get_chat_member(-1001668949698, m.from_user.id)
+            if u.status in (ChatMemberStatus.BANNED,
+                            ChatMemberStatus.RESTRICTED):
+                await m.reply_text(
+                    text="Sorry, You are Banned!\nNow You Can't Use Me.",
+                    disable_web_page_preview=True,
+                )
+                return 0
+        except UserNotParticipant:
+            if tryag:
+                mark = InlineKeyboardMarkup([
+                    [
+                        InlineKeyboardButton("🚀 𝗰𝗵𝗮𝗻𝗻𝗲𝗹 𝗹𝗶𝗻𝗸 1! ✅ ", url="https://t.me/Movies7xBoTs")
+                    ],
+                [
+                    InlineKeyboardButton("🚀 𝗰𝗵𝗮𝗻𝗻𝗲𝗹 𝗹𝗶𝗻𝗸 2! ✅", url="https://t.me/Anime7x")
+                ],
+                [
+                    InlineKeyboardButton("🚀 𝗰𝗵𝗮𝗻𝗻𝗲𝗹 𝗹𝗶𝗻𝗸 3! ✅", url="https://t.me/OnLyFans_OnlYFap")
+                ],
+                [
+                    InlineKeyboardButton("🚀 𝗰𝗵𝗮𝗻𝗻𝗲𝗹 𝗹𝗶𝗻𝗸 4! ✅", url="https://t.me/Movies7x")
+                ],
+                [
+                    InlineKeyboardButton("🚀 𝗰𝗵𝗮𝗻𝗻𝗲𝗹 𝗹𝗶𝗻𝗸 5! ✅", url="https://t.me/DraMaLiNKz")
+                ],
+                    [
+                        InlineKeyboardButton("🔖 𝘾𝙝𝙚𝙘𝙠 𝙨𝙪𝙗𝙨𝙘𝙧𝙞𝙥𝙩𝙞𝙤𝙣 𝙨𝙩𝙖𝙩𝙪𝙨💠", url=tryag)
+                    ]
+                ])
+            else:
+                mark = InlineKeyboardMarkup([
+                    [
+                        InlineKeyboardButton("🚀 𝗰𝗵𝗮𝗻𝗻𝗲𝗹 𝗹𝗶𝗻𝗸 1! ✅", url="https://t.me/Movies7xBoTs")
+                    ],
+                    [
+                        InlineKeyboardButton("🚀 𝗰𝗵𝗮𝗻𝗻𝗲𝗹 𝗹𝗶𝗻𝗸 2! ✅", url="https://t.me/Anime7x")
+                    ],
+                    [
+                        InlineKeyboardButton("🚀 𝗰𝗵𝗮𝗻𝗻𝗲𝗹 𝗹𝗶𝗻𝗸 3! ✅", url="https://t.me/OnLyFans_OnlYFap")
+                    ],
+                    [
+                        InlineKeyboardButton("🚀 𝗰𝗵𝗮𝗻𝗻𝗲𝗹 𝗹𝗶𝗻𝗸 4! ✅", url="https://t.me/Movies7x")
+                    ],
+                    [
+                        InlineKeyboardButton("🚀 𝗰𝗵𝗮𝗻𝗻𝗲𝗹 𝗹𝗶𝗻𝗸 5! ✅", url="https://t.me/DraMaLiNKz")
+                    ],
+                ])
+            await m.reply_text(
+                text="<b> 🍁 𝖳𝗈 𝖺𝖼𝖼𝖾𝗌𝗌 𝗈𝗎𝗋 𝖻𝗈𝗍'𝗌 𝖿𝖾𝖺𝗍𝗎𝗋𝖾𝗌, 𝗌𝗎𝖻𝗌𝖼𝗋𝗂𝖻𝖾 𝗍𝗈 𝗍𝗁𝖾𝗌𝖾 5 𝖼𝗁𝖺𝗇𝗇𝖾𝗅𝗌 𝗅𝗂𝗇𝗄 𝗉𝗋𝗈𝗏𝗂𝖽𝖾𝖽 𝖻𝖾𝗅𝗈𝗐. 🌟 𝖶𝗂𝗍𝗁 𝗈𝗎𝗋 𝖻𝗈𝗍, 𝗌𝖾𝖺𝗋𝖼𝗁 𝗆𝗈𝗏𝗂𝖾𝗌/𝗌𝖾𝗋𝗂𝖾𝗌 𝖻𝗒 𝗇𝖺𝗆𝖾 𝖺𝗇𝖽 𝖺𝖼𝖼𝖾𝗌𝗌 𝖺𝖽-𝖿𝗋𝖾𝖾 𝖿𝗂𝗅𝖾𝗌 𝗂𝗇𝗌𝗍𝖺𝗇𝗍𝗅𝗒 📥 </b>",
+                reply_markup=mark,
+            )
+            return 0
+        except RPCError:
+            await m.reply_text(
+                text="Something went Wrong.",
+                disable_web_page_preview=True,
+            )
+            return 0
+        return 1
+    return 0
 
 
 @Bot.on_message(filters.command('start') & filters.private & subscribed)
